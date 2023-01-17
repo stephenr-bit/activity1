@@ -2,6 +2,12 @@ import { StudentID, Student, Course, CourseGrade, Transcript } from './Types'
 import DataBase from './dataBase';
 
 let db: DataBase;
+const sam : Student = {studentID: 1, studentName: "Samwise"}
+const frodo : Student = {studentID: 0, studentName: "Frodo"}
+const courseGrade1: CourseGrade = { course: "English", grade: 95 };
+const courseGrade2: CourseGrade = { course: "Math", grade: 93 };
+const courseGrade3: CourseGrade = { course: "Math", grade: 95 };
+const transcript : Transcript = {student:frodo, grades: [courseGrade1, courseGrade2]}
 
 // start each test with a fresh empty database.
 beforeEach(() => {
@@ -74,15 +80,79 @@ describe('tests for addStudent', () => {
 
 });
 
-describe('tests for addGrade', () => {  
+describe('tests for addGrade, delete grade', () => {  
 
   test("add grade for an existing student per course", 
   () => {
-    const id1 = db.addStudent('blair');
+  
+    db.addStudent("Frodo")
+    db.addGrade(frodo, "English", courseGrade1)
+    let transcripts = db.getTranscript(0)
+
+    let testResultTranscript : Transcript = {student:frodo, grades:[courseGrade1]}
+
+    expect(transcripts).toEqual(testResultTranscript)
+  
+
+  });
+
+  test("change grade for an existing student per course", 
+  () => {
+  
+    db.addStudent("Frodo")
+    db.addGrade(frodo, "English", courseGrade1)
+    let transcripts = db.getTranscript(0)
+    let courseGrade2:CourseGrade= {course:"English",grade: 100}
+
+    let testResultTranscript : Transcript = {student:frodo, grades:[courseGrade1]}
+
+    expect(transcripts).toEqual(testResultTranscript)
+
+    db.addGrade(frodo, "English", courseGrade2)
+
+    let testResultTranscript2 : Transcript = {student:frodo, grades:[courseGrade2]}
+    transcripts = db.getTranscript(0)
+    expect(transcripts).toEqual(testResultTranscript2)
+
+
+
+
+  
+
+  });
+
+  //  // delete student
+  //  test("delete a student from a database", () => {
+  //   db = new DataBase;
+  //   db.addStudent("Frodo")
+  //   db.addGrade(frodo, "English", courseGrade1)
+
+  //   db.addStudent("Sam")
+  //   db.addGrade(sam, "Math", courseGrade3)
+
+  //   db.deleteStudent(0);
+
+  //   () => {
+  //   expect(() => db.getGrade(frodo, "Math")).toThrowError();
+  //   }
+  // });
+   
+//    test("delete a student from a database", () => {
     
+//     db.addStudent("Frodo")
+//     db.addGrade(frodo, "English", courseGrade1)
 
+//     db.addStudent("Sam")
+//     db.addGrade(sam, "Math", courseGrade3)
 
-  })
+//     db.deleteStudent(0);
+//     let transcripts = db.getTranscript(0);
+
+//     () => {
+//     expect(() => db.getGrade(frodo, "English")).toThrowError();
+//     }
+
+// })
 
 
   
